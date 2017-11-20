@@ -54,18 +54,18 @@ def plot_e_re_glu(s,ere,leg):
 	plt.figure(1)
 	#plt.plot([range(0,len(ere))],[ere],'*')
 	plt.legend(leg)
-	plt.plot([ss],[ere],'*')
-	plt.legend(leg)
-	plt.xlabel('glucose conc [mg/dl]')
+	plt.plot(ss,ere,'*')
+	#plt.legend(leg)
+	plt.xlabel('Glucose conc. [mg/dl]')
 	plt.title('Real part of the complex permittivity')
 	plt.ylabel('E_re')
 	return
 def plot_e_im_glu(s,eim,leg):
 	ss=np.sort(s)
 	plt.figure(2)
-	plt.plot([ss],[eim],'*')
-	plt.legend(leg)
-	plt.xlabel('glucose conc [mg/dl]')
+	plt.plot(ss,eim,'*')
+	#plt.legend(leg)
+	plt.xlabel('Glucose conc [mg/dl]')
 	#plt.plot([range(0,len(ere))],[eim],'*')
 	plt.title('Imaginary part of the complex permittivity')	
 	plt.ylabel('E_im')
@@ -92,8 +92,8 @@ def plot_e(s, ere,eim, leg):
 	plt.figure(4)
 	#plt.plot([range(0,len(ev))],[ev],'*')
 	#plt.xticks(range(0,len(ev)), leg)
-	plt.plot([ss],[ev],'*')
-	plt.legend(leg)
+	plt.plot(ss,ev,'*')
+	#plt.legend(leg)
 	plt.xlabel('glucose conc [mg/dl]')
 	plt.ylabel('E_tot')
 	plt.title('The measured permittivity')	
@@ -142,6 +142,12 @@ def plot_tune(s,f_s,leg):
 	plt.xlabel('Coupling angle [deg]')
 	plt.ylabel('f_s [Hz]')	
 	return
+def print_eps(s, ere,eim, leg):
+	print(leg)
+#	print(e)
+	print(ere)
+	print(eim)
+	return
 def runscript(opt=["-opt"]):
 	if opt[0]=="-opt":
 		print('Options:')
@@ -162,7 +168,7 @@ def runscript(opt=["-opt"]):
 		inp=input('Specify output file to evaluate: ')
 		fn=mf.find_file(inp)		
 	for i in fn:
-		[m,h]=mf.read_file2(i)
+		[m,h]=mf.read_file2	(i)
 	for i in h:
 		if i.find('!')!=-1:
 			stn=i[2:5]
@@ -183,6 +189,7 @@ def runscript(opt=["-opt"]):
 			plot_e_im_vs_ere(eim,ere,leg)
 		elif i=="-e":
 			plot_e(s, ere,eim, leg)
+			print_eps(s, ere,eim, leg)
 		elif i=="-vfs":
 			plot_v_fs(f_s,s,leg)
 		elif i=="-gfs":
