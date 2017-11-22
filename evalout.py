@@ -196,6 +196,8 @@ def runscript(opt=["-opt"]):
 			plot_glucose_fs(s,f_s,leg)
 		elif i=="-tune":
 			plot_tune(s,f_s,leg)
+		elif i=="-":
+			plot_v_fs(f_s,s,leg)
 		elif i=="-drw":
 			input('Are you sure you want to rewrite pickle? (crtl+c to abort)')
 			a=[[m,h]]
