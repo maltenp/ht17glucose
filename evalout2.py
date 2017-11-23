@@ -196,11 +196,12 @@ def plot_any(a):
 		print("The following files were used to make the plot(s)\n")
 		print(fnames)
 		cl=input("\nDo you want to make a custom legend? ('leg1,leg2,leg3'  etc.)\n")
-		try:
-			cleg=cl.split(",")
-			plt.legend(cleg)
-		except:
-			print("Wrong input")
+		if cl!='':
+			try:
+				cleg=cl.split(",")
+				plt.legend(cleg)
+			except:
+				print("Wrong input")
 		
 	return
 def runopt(menu):
