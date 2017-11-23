@@ -20,6 +20,7 @@ def leg_and_s(h, ustart=3,ustop=-8, start="met"):
 def dump2pickle():
 	fn=mf.find_file('metcal2.txt')
 	[m,h]=mf.read_file2(fn[0])
+	print(m)
 	with open("met.pickle","wb") as f:
 		pickle.dump( [m,h], f)
 	return

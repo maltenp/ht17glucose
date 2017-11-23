@@ -32,6 +32,7 @@ def read_file2(fn=".DAT", exv=['!','#']):
 	c=-1
 	str1=[]
 	for line in f:
+		print(line)
 		if all(line.find(i) == -1 for i in exv):
 			row=line.split(' ')
 			row=list(map(np.longfloat,row))
