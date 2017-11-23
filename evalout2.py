@@ -97,10 +97,10 @@ def get_mh():
 	except:
 		inp=input('Specify output file to evaluate: ')
 		fn=mf.find_file(inp)	
-	a=[]
 	for i in fn:
-		a.append(mf.read_file2(i))
-	return a
+		mh=mf.read_file2(i)
+		
+	return [mh]
 def menu(opt=["-opt"]):
 	menu=mymenu.menu()
 	menu.defoption('-rw','Rewrite pickle')
@@ -122,7 +122,58 @@ def menu(opt=["-opt"]):
 		menu.option(i)
 	runopt(menu)
 	return
+def plot_any(a):
+	qu=False
+	c=1
 
+	while qu==False:
+		print("Choose what to plot:")
+		print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
+		ltru=False
+		ztru=False
+		inp1=input("What would you like to plot? 'X,Y,{Z,leg}', {}:optional\n")
+		try:
+			x=inp1.split(",")[0]
+			y=inp1.split(",")[1]
+		except: 
+			print("Wrong input")
+			exit()
+		try:
+			z=inp1.split(",")[2]
+			if z=="leg":
+				ltru=True
+			else:
+				ztru=True
+		except: pass
+		plt.figure(c)
+		for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
+				plt.figure(c)
+				if ltru:
+					plt.plot([i[x]],[i[y]],'*')
+					plt.legend(i["leg"])
+				elif ztru:
+					fig=plt.figure(c)
+					ax=fig.add_subplot(111,projection='3d')
+					ax.plot_trisurf(i[x],i[y],i[z])
+				else:
+					plt.plot(i[x],i[y],'*')
+		c+=1
+		qin=input("Press enter to plot again('any_key+enter' to exit)")
+		if qin!='':
+			qu=True
+	for i in range(1,c):
+		print("Figure: %i" %i)
+		plt.figure(i)
+		t=input("Enter title:")
+		xl=input("Enter xlabel:")
+		yl=input("Enter ylabel:")
+		if ztru:
+			zl=input("Enter zlabel:")
+			ax.set_zlabel(zl)
+		plt.title(t)
+		plt.xlabel(xl)
+		plt.ylabel(yl)
+	return
 def runopt(menu):
 	boo=[i for i, x in enumerate(menu.boolopt) if x]
 	for i in (menu.opts[i] for i in boo):
@@ -139,60 +190,7 @@ def runopt(menu):
 			a=readpickle()
 		elif i==menu.opts[3]:
 			a=readpickle()
-			qu=False
-			c=1
-			
-			while qu==False:
-				print("Choose what to plot:")
-				print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
-				ltru=False
-				ztru=False
-				inp1=input("What would you like to plot? 'X,Y,{Z,leg}', {}:optional\n")
-				try:
-					x=inp1.split(",")[0]
-					y=inp1.split(",")[1]
-				except: 
-					print("Wrong input")
-					exit()
-				try:
-					z=inp1.split(",")[2]
-					if z=="leg":
-						ltru=True
-					else:
-						ztru=True
-				except: pass
-				plt.figure(c)
-				for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
-						plt.figure(c)
-						if ltru:
-							plt.plot([i[x]],[i[y]],'*')
-							plt.legend(i["leg"])
-						elif ztru:
-							fig=plt.figure(c)
-							ax=fig.add_subplot(111,projection='3d')
-							ax.plot_trisurf(i[x],i[y],i[z])
-						else:
-							plt.plot(i[x],i[y],'*')
-				c+=1
-				qin=input("Press enter to plot again('any_key+enter' to exit)")
-				if qin!='':
-					qu=True
-			for i in range(1,c):
-				print("Figure: %i" %i)
-				plt.figure(i)
-				t=input("Enter title:")
-				xl=input("Enter xlabel:")
-				yl=input("Enter ylabel:")
-				if ztru:
-					zl=input("Enter zlabel:")
-					ax.set_zlabel(zl)
-				plt.title(t)
-				plt.xlabel(xl)
-				plt.ylabel(yl)
-				
-				
-		#elif i==menu.opts[4]:
-	#6
+			plot_any(a)
 	plt.show()
 	return
 if __name__ == "__main__":

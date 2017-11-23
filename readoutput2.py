@@ -56,7 +56,7 @@ def read_file3(fn):
 	row =[]
 	for line in f:
 		if line.find("PORT 1 DATA FILE")!=-1:
-			N.append(line.split(' ')[6])
+			N.append(line.split(' ')[6]+".s1p")
 		if line.find(" Q0 =")!=-1:
 			str1=' '.join(line.split())
 			row.append(str1.split(" ")[2])
@@ -86,7 +86,7 @@ def print_to_txt(lst, fn='output.txt', h=''):
 	f=open(fn,'a')
 	f.write('# Q0 Q0e FL Ke K\n')
 	if h!='':
-		f.write(' '.join(h))
+		f.write(' '.join(h)+" \n")
 	for i in lst:
 		for j in range(0,len(i)):	
 			f.write('%s '%i[j])
