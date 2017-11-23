@@ -163,6 +163,7 @@ def plot_any(a):
 				ztru=True
 		except: pass
 		plt.figure(c)
+		fnames=[]
 		for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
 				plt.figure(c)
 				if ltru:
@@ -174,6 +175,7 @@ def plot_any(a):
 					ax.plot_trisurf(i[x],i[y],i[z])
 				else:
 					plt.plot(i[x],i[y],'*')
+					fnames.append(' '.join(i["leg"]))
 		c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
 		if qin!='':
@@ -190,6 +192,16 @@ def plot_any(a):
 		plt.title(t)
 		plt.xlabel(xl)
 		plt.ylabel(yl)
+		print("The order plotted are the same as the appended pickle order.")
+		print("The following files were used to make the plot(s)\n")
+		print(fnames)
+		cl=input("\nDo you want to make a custom legend? ('leg1,leg2,leg3'  etc.)\n")
+		try:
+			cleg=cl.split(",")
+			plt.legend(cleg)
+		except:
+			print("Wrong input")
+		
 	return
 def runopt(menu):
 	boo=[i for i, x in enumerate(menu.boolopt) if x]
