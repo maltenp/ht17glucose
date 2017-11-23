@@ -223,8 +223,8 @@ def runopt(menu):
 	plt.show()
 	return
 if __name__ == "__main__":
-	#try:
-	menu(sys.argv[1:])
-	#except IndexError:
-	#	print(sys.argv)
-	#	menu()
+	try:
+		menu(sys.argv[1:])
+	except IndexError:
+		print(sys.argv)
+		menu()
