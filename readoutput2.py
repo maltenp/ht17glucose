@@ -47,9 +47,46 @@ def read_file2(fn):
 			pass
 	mtrix.insert(0,N)
 	return mtrix
-def print_to_txt(lst, fn='output.txt'):
+def read_file3(fn):
+	f=open(fn,'r')
+	mtrix=[]
+	N=[]
+	N.append("!")
+	c=-1
+	row =[]
+	for line in f:
+		if line.find("PORT 1 DATA FILE")!=-1:
+			N.append(line.split(' ')[6])
+		if line.find(" Q0 =")!=-1:
+			str1=' '.join(line.split())
+			row.append(str1.split(" ")[2])
+			row.append(str1.split(" ")[4])
+			if float(str1.split(" ")[4])/float(str1.split(" ")[2])>0.1:
+				print("WARNING, large relative Q error in %s"%N[-1])
+			str1.split(" +- ")[1]	
+		if line.find(" K = ")!=-1:
+			str1=' '.join(line.split())
+			row.append(str1.split(" ")[2])
+			row.append(str1.split(" ")[4])
+			if float(str1.split(" ")[4])/float(str1.split(" ")[2])>0.1:
+				print("WARNING, large relative K error in %s"%N[-1])
+		if line.find(" FL =")!=-1:
+			str1=' '.join(line.split(' '))
+			row.append(str1.split(' ')[4])
+			# compatible with earlier versions:    
+			t=row[2]
+			row[2]=row[4]
+			row[4]=t
+			#end compatible fix
+			mtrix.append(row)
+			row=[]
+				
+	return [mtrix, N]
+def print_to_txt(lst, fn='output.txt', h=''):
 	f=open(fn,'a')
-	f.write('# Q0 Q0e FL\n')
+	f.write('# Q0 Q0e FL Ke K\n')
+	if h!='':
+		f.write(' '.join(h))
 	for i in lst:
 		for j in range(0,len(i)):	
 			f.write('%s '%i[j])
@@ -60,12 +97,16 @@ def print_to_txt(lst, fn='output.txt'):
 def main():
 	fn=find_file()
 	rf=[]
+	leg=[]
+	#read_file3(fn)
 	for i in fn: #only neccesary if you have multiple .DAT files.
 		print('Opening %s'%i)
-		rf.append(read_file2(i))
+		[m,N]=read_file3(i)
+		rf.append(m)
+		#leg.append(N)
 		#print(rf)
 	
-	print_to_txt(rf[0]) #only one .DAT
+	print_to_txt(rf[0],h=N) #only one .DAT
 	
 	return
 main()	
