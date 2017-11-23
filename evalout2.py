@@ -84,9 +84,13 @@ def run_mh(mh):
 	#print('%s will be sorted'%s)
 	[dfv,dqv]=get_df_dq(m,s)
 	[ere, eim]=get_e(dfv,dqv)
-	dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"Ke":m[:,3],"K":m[:,4],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
+	try:
+		dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"Ke":m[:,3],"K":m[:,4],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
+	except IndexError:
+		dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
 	return dict
 def run_a(a):
+	#a[3]
 	run=[]
 	for i in a:
 		run.append(run_mh(i))
@@ -98,8 +102,8 @@ def get_mh():
 		inp=input('Specify output file to evaluate: ')
 		fn=mf.find_file(inp)	
 	for i in fn:
-		mh=read_file(fn=i)
-	return [mh]
+		[m,h]=read_file(fn=i)
+	return [m,h]
 def read_file(fn=".txt", exv=['!','#']):
 	'''Reads from file and returns a numpy array, The user specifies a unique char which is part of the unwanted lines.'''
 	f=open(fn,'r')
@@ -191,7 +195,7 @@ def runopt(menu):
 	boo=[i for i, x in enumerate(menu.boolopt) if x]
 	for i in (menu.opts[i] for i in boo):
 		if i==menu.opts[0]:
-			a=get_mh()
+			a=[get_mh()]
 			input("Are you sure you want to rewrite pickle? (crtl+c to cancel)")
 			dump2pickle(a)
 		elif i==menu.opts[1]:
@@ -207,8 +211,8 @@ def runopt(menu):
 	plt.show()
 	return
 if __name__ == "__main__":
-	try:
-		menu(sys.argv[1:])
-	except IndexError:
-		print(sys.argv)
-		menu()
+	#try:
+	menu(sys.argv[1:])
+	#except IndexError:
+	#	print(sys.argv)
+	#	menu()
