@@ -264,7 +264,13 @@ def custom_plot(data):
 	if sbool:
 		ssleg=list(map(str,ss[0]))
 		plt.legend(ssleg)
-	plt.show()
+	cl=input("\nDo you want to make a custom legend? ('leg1,leg2,leg3'  etc.)\n")
+	if cl!='':
+		try:
+			cleg=cl.split(",")
+			plt.legend(cleg)
+		except:
+			print("Wrong input")
 	return
 def runopt(menu):
 	boo=[i for i, x in enumerate(menu.boolopt) if x]
@@ -292,6 +298,8 @@ def runopt(menu):
 			a=readpickle()
 			data=print_any(a)
 			custom_plot(data)
+			plt.show()
+
 			
 	return
 if __name__ == "__main__":
