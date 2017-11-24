@@ -283,6 +283,7 @@ def runopt(menu):
 		elif i==menu.opts[3]:
 			a=readpickle()
 			plot_any(a)
+			plt.show()
 		elif i== menu.opts[4]:
 			a=readpickle()
 			data=print_any(a)
