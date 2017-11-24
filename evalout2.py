@@ -124,8 +124,8 @@ def menu(opt=["-opt"]):
 	menu.defoption('-a','Append to pickle')
 	menu.defoption('-r','read from pickle')	
 	menu.defoption('-cplot','Plot a with a custom setup')	
-	#menu.defoption('-erg','plot_e_re_glu(s,ere,leg)')
-	#menu.defoption('-eig','plot_e_im_glu(s,eim,leg)')
+	menu.defoption('-print','Print values')
+	menu.defoption('-plcustom','Plot custom')
 	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
 	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
 	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
@@ -139,6 +139,29 @@ def menu(opt=["-opt"]):
 		menu.option(i)
 	runopt(menu)
 	return
+def print_any(a):
+	print("Choose what to print:")
+	print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
+	inp1=input("What would you like to print/save? 'a,{b,c,..}', {}:optional\n")
+	try:
+		inpv=inp1.split(",")
+	except:
+		print("Wrong input")
+		exit()
+	data=[]
+	c=0
+	for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
+		row=[]
+		c+=1
+		for k in inpv:
+			row={k:i[k]}
+			#print(row)
+			#print(row)
+			data.append(row)
+	print("data saved")
+	#for i in data:
+	#	print(i.get('ss'))
+	return data
 def plot_any(a):
 	qu=False
 	c=1
@@ -172,7 +195,7 @@ def plot_any(a):
 				elif ztru:
 					fig=plt.figure(c)
 					ax=fig.add_subplot(111,projection='3d')
-					ax.plot_trisurf(i[x],i[y],i[z])
+					ax.scatter(i[x],i[y],i[z])
 				else:
 					plt.plot(i[x],i[y],'*')
 					fnames.append(' '.join(i["leg"]))
@@ -204,6 +227,45 @@ def plot_any(a):
 				print("Wrong input")
 		
 	return
+def custom_plot(data):
+	sbool=False
+	inp=input("what do you want to plot? 'x,y,{ss}', {}:opitonal\n")
+	try:
+		inpv=inp.split(",")
+	except:
+		print("Wrong input")
+	if len(inpv)>2:
+		sbool=True
+	xx=[]
+	yy=[]
+	ss=[]
+	for i in data:
+		x=i.get(inpv[0])
+		y=i.get(inpv[1])
+		try:
+			len(x)
+			xx.append(x)
+		except TypeError:
+			pass
+		try:
+			len(y)
+			yy.append(y)
+		except TypeError:
+			pass
+		if sbool:
+			s=i.get(inpv[2])
+			try:
+				len(s)
+				ss.append(s)
+			except TypeError:
+				pass
+			
+	plt.plot(xx,yy)
+	if sbool:
+		ssleg=list(map(str,ss[0]))
+		plt.legend(ssleg)
+	plt.show()
+	return
 def runopt(menu):
 	boo=[i for i, x in enumerate(menu.boolopt) if x]
 	for i in (menu.opts[i] for i in boo):
@@ -221,7 +283,15 @@ def runopt(menu):
 		elif i==menu.opts[3]:
 			a=readpickle()
 			plot_any(a)
-	plt.show()
+		elif i== menu.opts[4]:
+			a=readpickle()
+			data=print_any(a)
+			print(data)
+		elif i== menu.opts[5]:
+			a=readpickle()
+			data=print_any(a)
+			custom_plot(data)
+			
 	return
 if __name__ == "__main__":
 	try:
