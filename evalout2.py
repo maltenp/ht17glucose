@@ -283,7 +283,7 @@ def gotomenu(opt=["-opt"]):
 	menu.defoption('-rw','Rewrite pickle')
 	menu.defoption('-a','Append to pickle')
 	menu.defoption('-r','read from pickle')	
-	menu.defoption('-cplot','Plot a with a custom setup')	
+	menu.defoption('-cplot','Plot with a custom setup')	
 	menu.defoption('-print','Print values')
 	menu.defoption('-plcustom','Plot custom')
 	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
