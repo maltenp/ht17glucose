@@ -197,10 +197,7 @@ def plot_any(a):
 					ax=fig.add_subplot(111,projection='3d')
 					ax.scatter(i[x],i[y],i[z])
 				else:
-					xx=np.array(i[x])#/2/23*100
-					yy=np.array(i[y])/e.return_f0q0()[1]*100 #in percent
-					plt.plot(xx,yy,'*')
-					#plt.plot(i[x],i[y],'*')
+					plt.plot(i[x],i[y],'*')
 					fnames.append(' '.join(i["leg"]))
 		c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
@@ -276,34 +273,30 @@ def custom_plot(data):
 			print("Wrong input")
 	return
 def runopt(menu):
-	boo=[i for i, x in enumerate(menu.boolopt) if x]
-	for i in (menu.opts[i] for i in boo):
-		if i==menu.opts[0]:
-			a=[get_mh()]
-			input("Are you sure you want to rewrite pickle? (crtl+c to cancel)")
-			dump2pickle(a)
-		elif i==menu.opts[1]:
-			a=readpickle()
-			a.append(get_mh())
-			print("Appending pickle")
-			dump2pickle(a)
-		elif i==menu.opts[2]:
-			a=readpickle()
-		elif i==menu.opts[3]:
-			a=readpickle()
-			plot_any(a)
-			plt.show()
-		elif i== menu.opts[4]:
-			a=readpickle()
-			data=print_any(a)
-			print(data)
-		elif i== menu.opts[5]:
-			a=readpickle()
-			data=print_any(a)
-			custom_plot(data)
-			plt.show()
-
-			
+	if menu.boolopt[0]:
+		a=[get_mh()]
+		input("Are you sure you want to rewrite pickle? (crtl+c to cancel)")
+		dump2pickle(a)
+	elif menu.boolopt[1]:
+		a=readpickle()
+		a.append(get_mh())
+		print("Appending pickle")
+		dump2pickle(a)
+	elif menu.boolopt[2]:
+		a=readpickle()
+	elif menu.boolopt[3]:
+		a=readpickle()
+		plot_any(a)
+		plt.show()
+	elif menu.boolopt[4]:
+		a=readpickle()
+		data=print_any(a)
+		print(data)
+	elif menu.boolopt[5]:
+		a=readpickle()
+		data=print_any(a)
+		custom_plot(data)
+		plt.show()
 	return
 if __name__ == "__main__":
 	try:
