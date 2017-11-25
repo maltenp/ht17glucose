@@ -117,28 +117,6 @@ def read_file(fn=".txt", exv=['!','#']):
 			N.append(np.array(row))
 		else: str1.append(line)
 	return [np.array(N), str1]
-
-def menu(opt=["-opt"]):
-	menu=mymenu.menu()
-	menu.defoption('-rw','Rewrite pickle')
-	menu.defoption('-a','Append to pickle')
-	menu.defoption('-r','read from pickle')	
-	menu.defoption('-cplot','Plot a with a custom setup')	
-	menu.defoption('-print','Print values')
-	menu.defoption('-plcustom','Plot custom')
-	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
-	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
-	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
-	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
-	#menu.defoption('-tune','plot_tune(s,f_s)')
-	#menu.defoption('-test','hejhej')
-	if opt[0]=="-opt":
-		menu.print_menu()
-		exit()
-	for i in opt:
-		menu.option(i)
-	runopt(menu)
-	return
 def print_any(a):
 	print("Choose what to print:")
 	print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
@@ -272,6 +250,7 @@ def custom_plot(data):
 		except:
 			print("Wrong input")
 	return
+
 def runopt(menu):
 	if menu.boolopt[0]:
 		a=[get_mh()]
@@ -298,6 +277,29 @@ def runopt(menu):
 		custom_plot(data)
 		plt.show()
 	return
+
+def menu(opt=["-opt"]):
+	menu=mymenu.menu()
+	menu.defoption('-rw','Rewrite pickle')
+	menu.defoption('-a','Append to pickle')
+	menu.defoption('-r','read from pickle')	
+	menu.defoption('-cplot','Plot a with a custom setup')	
+	menu.defoption('-print','Print values')
+	menu.defoption('-plcustom','Plot custom')
+	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
+	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
+	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
+	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
+	#menu.defoption('-tune','plot_tune(s,f_s)')
+	#menu.defoption('-test','hejhej')
+	if opt[0]=="-opt":
+		menu.print_menu()
+		exit()
+	for i in opt:
+		menu.option(i)
+	runopt(menu)
+	return
+
 if __name__ == "__main__":
 	try:
 		menu(sys.argv[1:])
