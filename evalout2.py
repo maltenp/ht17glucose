@@ -278,7 +278,7 @@ def runopt(menu):
 		plt.show()
 	return
 
-def menu(opt=["-opt"]):
+def gotomenu(opt=["-opt"]):
 	menu=mymenu.menu()
 	menu.defoption('-rw','Rewrite pickle')
 	menu.defoption('-a','Append to pickle')
@@ -302,7 +302,7 @@ def menu(opt=["-opt"]):
 
 if __name__ == "__main__":
 	try:
-		menu(sys.argv[1:])
+		gotomenu(sys.argv[1:])
 	except IndexError:
 		print(sys.argv)
-		menu()
+		gotomenu()
