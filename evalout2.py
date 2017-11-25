@@ -197,9 +197,12 @@ def plot_any(a):
 					ax=fig.add_subplot(111,projection='3d')
 					ax.scatter(i[x],i[y],i[z])
 				else:
-					plt.plot(i[x],i[y],'*')
+					xx=np.array(i[x])#/2/23*100
+					yy=np.array(i[y])/e.return_f0q0()[1]*100 #in percent
+					plt.plot(xx,yy,'*')
+					#plt.plot(i[x],i[y],'*')
 					fnames.append(' '.join(i["leg"]))
-		c+=1
+			c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
 		if qin!='':
 			qu=True
