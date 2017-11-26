@@ -8,28 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import my_func as mf
 import sys
+import mymenu
 def find_nearest(array,value):
 	'''Finds the closest value in an array and returns that array-value'''
 	idx = (np.abs(array-value)).argmin()
 	return array[idx]
-def plot_fig(m,smallv, end1v): #fnp
-	c=0
-	leg=[]
-	for i in m:
-		small=smallv[c]
-		end1=end1v[c]
-		plt.figure(1)
-		plt.plot(i[:,0],i[:,1])
-		plt.plot(small[:,0],small[:,1],'+')
-		#f0=i[i[:,1]==min(i[:,1])]
-		#leg.append(fnp[c])
-		leg.append(end1)
-		c+=1		
-	#print('The resonace frequence is:\n%f'%f0[0][0])
-	print("SEE PLOT")
-	#plt.xlim([f0[0][0]*0.999,f0[0][0]*1.001])
-	plt.legend(leg)
-	return
 def print_file(m,tdb,in1,int1,out1, fnp):
 	c=0
 	smallv=[]
@@ -117,20 +100,9 @@ def makesmall(mtrix,toldb=-0.1,inner=1, inter=4, outer=0):
 	#mtrix=np.array(mtrix)    
 	return mtrix[cvx][:]
 def draw(out1=0,inter1=0,inner1=0,inner2=0,inter2=0,out2=0):
+	'''Draws a figure of the intervalls'''
 	print("______       ______\n%2i  %2i\     /%i  %2i\n       \   /\n      %2i\_/%i\n"%(out1,inter1,inter2,out2,inner1,inner2)) 
 	return
-def check_interv(iv,fn,m):
-	iv=iv.split(":")
-	iv=list(map(int,iv))
-	if (iv[0]==iv[1] and iv[0]>0):
-			iv[0]=iv[0]-1 
-	elif iv[1]>iv[0] or iv[1]<0: pass
-	else: iv[1]=1
-	if len(fn)>1:
-		m=m[iv[0]:iv[1]]
-		fnp=fn[iv[0]:iv[1]]
-	else: fnp=fn    
-	return [fnp, m]
 def re_matrix(fn):
 	m=[]
 	for i in fn:
@@ -138,7 +110,27 @@ def re_matrix(fn):
 		array=mf.read_file(i)
 		m.append(array)
 	return m
+def plot_fig(m,smallv, end1v): #fnp
+	'''Plots the frequency response with the selected points.'''
+	c=0
+	leg=[]
+	for i in m:
+		small=smallv[c]
+		end1=end1v[c]
+		plt.figure(1)
+		plt.plot(i[:,0],i[:,1])
+		plt.plot(small[:,0],small[:,1],'+')
+		#f0=i[i[:,1]==min(i[:,1])]
+		#leg.append(fnp[c])
+		leg.append(end1)
+		c+=1		
+	#print('The resonace frequence is:\n%f'%f0[0][0])
+	print("SEE PLOT")
+	#plt.xlim([f0[0][0]*0.999,f0[0][0]*1.001])
+	plt.legend(leg)
+	return
 def plot_freq_vs_db(m,fnp):
+	'''Plots the frequency response'''
 	c=0
 	leg=[]
 	plt.figure(1)
@@ -163,6 +155,7 @@ def plot_freq_vs_db(m,fnp):
 	plt.ylabel('Gain [dB]')
 	return
 def plot_freq(m,fnp):
+	'''Plots the frequency response'''
 	c=0
 	s=[]
 	leg=[]
@@ -185,78 +178,77 @@ def plot_freq(m,fnp):
 	plt.xlabel('Frequency [Hz]')
 	plt.ylabel('Gain [dB]')
 	return
-def runscript(opt=["-opt"]):
-	if opt[0]=="-opt":
-		print('Options:')
-		print('-q: Quick run, all 1.s1p files tbd="-0.1", in1="25", int1="50", out1="0"')
-		print('-qn: Quick run, all N.s1p files tbd="-0.1", in1="25", int1="50", out1="0"')
-		print('-f: Custom setup')
-		print('-p: plot, only works together with -q, -qn and -f (before -p)\n')
-		print('-fdb: plots the frequency respons vs db')
-		print('-pf: plot fs vs conc')
-#		print('-gfs: plot_glucose_fs(s,f_s,leg)\n')
-#		print('-pt: plot_tune(s,f_s)\n')
-		exit()
-#	os.path.abspath(__file__)
-	#end1=raw_input('Enter unique last few characters of the file you want to open\n(etc. xxx.s1p)\n')
-	#if len(fn)>1:
-		#iv=raw_input('Opening %s.\nChoose interval, eg. 2:-1:\n'%fn)
-		#iv="0:23"
-	#else: iv="0:0"
-	#[fnp, m]=check_interv(iv,fn,m)
-	for i in opt:
-		if i=="-q":
-			end1="1"
-			fn=mf.find_file(end1+".s1p")
-			m=re_matrix(fn)
-			tdb="-0.1"
-			in1="25"
-			int1="50"
-			out1="0"
-			[smallv, end1v]=print_file(m,tdb,in1,int1,out1,fn)
-		elif i=="-qn":
-			end1=raw_input('Enter the last, digit/character before file extension, (etc: N.s1p)\n')
-			fn=mf.find_file(end1+".s1p")
-			m=re_matrix(fn)
-			tdb="-0.1"
-			in1="25"
-			int1="50"
-			out1="0"
-			[smallv, end1v]=print_file(m,tdb,in1,int1,out1,fn)
-		elif i=="-f":
-			end1=raw_input('Enter the last, digit(s)/character(s) before file extension, (etc: yyyyyXXX.s1p)\n')
-			fn=mf.find_file(end1+".s1p")
-			m=re_matrix(fn)			
-			tdb=raw_input('Enter the tol-db:\n')
-			in1=raw_input('Enter the inner step length\n(beween min and mean(trough):\n')
-			int1=raw_input('Enter the intermediate step length\n(beween tol-db and mean(trough):\n')
-			out1=raw_input('Enter the outer step length:\n')
-			[smallv, end1v]=print_file(m,tdb,in1,int1,out1,fn)
-		elif i=="-p":
-			try:
-				plot_fig(m, smallv, end1v)
-			except UnboundLocalError:
-				print('ERROR, this option has to be used together with one of the above, (-q,qn,f-)')
-				exit()
-		elif i=="-fdb":
-			end1=raw_input('Enter the last, digit(s)/character(s) before file extension, (etc: yyyyyXXX.s1p)\n')
-			fn=mf.find_file(end1+".s1p")
-			m=re_matrix(fn)			
-			plot_freq_vs_db(m,fn)
-		elif i=="-pf":
-			end1=raw_input('Enter the last, digit(s)/character(s) before file extension, (etc: yyyyyXXX.s1p)\n')
-			fn=mf.find_file(end1+".s1p")
-			m=re_matrix(fn)
-			plot_freq(m,fn)
-#		elif i=="-tune":
-#			plot_tune(s,f_s,leg)
-		else: pass	 
-	plt.show()
-
+def runopt(menu):
+	'''The function defines the content of each menu item, the order is the same as the when the the menu was created.'''	
+	if menu.boolopt[0]: #0th menu item
+		end1="1"
+		fn=mf.find_file(end1+".s1p")
+		m=re_matrix(fn)
+		tdb="-0.1"
+		in1="25"
+		int1="50"
+		out1="0"
+		[smallv, end1v]=print_file(m,tdb,in1,int1,out1,fn)
+	elif menu.boolopt[1]: #1th menu item.. etc
+		end1=raw_input('Enter the last, digit/character before file extension, (etc: N.s1p)\n')
+		fn=mf.find_file(end1+".s1p")
+		m=re_matrix(fn)
+		tdb="-0.1"
+		in1="25"
+		int1="50"
+		out1="0"
+		[smallv, end1v]=print_file(m,tdb,in1,int1,out1,fn)
+	elif menu.boolopt[2]:
+		end1=raw_input('Enter the last, digit(s)/character(s) before file extension, (etc: yyyyyXXX.s1p)\n')
+		fn=mf.find_file(end1+".s1p")
+		m=re_matrix(fn)			
+		tdb=raw_input('Enter the tol-db:\n')
+		in1=raw_input('Enter the inner step length\n(beween min and mean(trough):\n')
+		int1=raw_input('Enter the intermediate step length\n(beween tol-db and mean(trough):\n')
+		out1=raw_input('Enter the outer step length:\n')
+		[smallv, end1v]=print_file(m,tdb,in1,int1,out1,fn)
+	elif menu.boolopt[3]:
+		try:
+			plot_fig(m, smallv, end1v)
+		except UnboundLocalError:
+			print('ERROR, this option has to be used together with one of the above, (-q,qn,f-)')
+			exit()
+	elif menu.boolopt[4]:
+		end1=raw_input('Enter the last, digit(s)/character(s) before file extension, (etc: yyyyyXXX.s1p)\n')
+		fn=mf.find_file(end1+".s1p")
+		m=re_matrix(fn)			
+		plot_freq_vs_db(m,fn)
+	elif menu.boolopt[5]:
+		end1=raw_input('Enter the last, digit(s)/character(s) before file extension, (etc: yyyyyXXX.s1p)\n')
+		fn=mf.find_file(end1+".s1p")
+		m=re_matrix(fn)
+		plot_freq(m,fn)
 	return
+
+def gotomenu(opt=["-opt"]):
+	'''Creates a menu of input arguments'''
+	menu=mymenu.menu()
+	menu.defoption('-q','Quick run, all 1.s1p files tbd="-0.1", in1="25", int1="50", out1="0"') # 0th menu item
+	menu.defoption('-qn','Quick run, all N.s1p files tbd="-0.1", in1="25", int1="50", out1="0"') # 1th menu item... etc.
+	menu.defoption('-f','Custom setup')	
+	menu.defoption('-p','Plot, only works together with -q, -qn and -f (before -p)')	
+	menu.defoption('-fdb','plots the frequency respons vs db')
+	menu.defoption('-pf: plot fs vs conc')
+	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
+	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
+	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
+	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
+	#menu.defoption('-tune','plot_tune(s,f_s)')
+	#menu.defoption('-test','hejhej')
+	for i in opt:
+		menu.option(i)
+	if not any(menu.boolopt):
+		print("Wrong or no input arguments given")
+		print(opt)
+		menu.print_menu()
+		exit()		
+	runopt(menu)
+	return
+
 if __name__ == "__main__":
-	try:
-		runscript(sys.argv[1:])
-	except IndexError:
-		print(sys.argv)
-		runscript()
+	gotomenu(sys.argv[1:])
