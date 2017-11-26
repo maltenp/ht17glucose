@@ -292,17 +292,14 @@ def gotomenu(opt=["-opt"]):
 	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
 	#menu.defoption('-tune','plot_tune(s,f_s)')
 	#menu.defoption('-test','hejhej')
-	if opt[0]=="-opt":
-		menu.print_menu()
-		exit()
 	for i in opt:
 		menu.option(i)
+	if not any(menu.boolopt):
+		print("Wrong or no input arguments given\n")
+		menu.print_menu()
+		exit()		
 	runopt(menu)
 	return
 
 if __name__ == "__main__":
-	try:
-		gotomenu(sys.argv[1:])
-	except IndexError:
-		print(sys.argv)
-		gotomenu()
+	gotomenu(sys.argv[1:])
