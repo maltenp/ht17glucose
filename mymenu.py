@@ -19,7 +19,7 @@ class menu:
 			c+=1
 		return
 	def print_menu(self):
-		print("Options:")
+		print("\nOptions:")
 		for i in range(0,len(self.opts)):
 			print("%s : %s" %(self.opts[i],self.defins[i]))
 		return
