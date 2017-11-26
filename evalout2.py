@@ -77,7 +77,7 @@ def get_e(dfv,dqv):
 	eim=findepp(dqv,kpp)
 	return	[ere, eim]
 def run_mh(mh):
-	'''Evaluates the matrix m and the header h'''
+	'''Evaluates the matrix m and the header h and returns a dict'''
 	m=mh[0]
 	h=mh[1]
 	for i in h:
@@ -85,16 +85,22 @@ def run_mh(mh):
 			stn=i[2:5]
 			break
 	[leg, s]=e.leg_and_s(h,start=stn)
+	
 	leg=e.sort_ind(s,leg)
 	ss=np.sort(s)
 	#print('%s will be sorted'%s)
 	[dfv,dqv]=get_df_dq(m,s)
 	[ere, eim]=get_e(dfv,dqv)
+	Q0=m[:,0]
+	Q0e=m[:,1]
+	FL=m[:,2]
 	try:
-		dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"Ke":m[:,3],"K":m[:,4],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
-	except IndexError:
-		dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
-	return dict
+		Ke=m[:,3]
+		K=m[:,4]
+		#dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"Ke":m[:,3],"K":m[:,4],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
+	except IndexError:pass
+	del stn,s,i,h,m,mh #remove copies and unncessesary items in the dict
+	return locals()
 def run_a(a):
 	'''returns a vector of runs (dicts)'''
 	run=[]
@@ -104,7 +110,7 @@ def run_a(a):
 def remove_from_pickle(a):
 	c=0
 	for i in a:
-		print("[%i] : %s: "%(c,i[2]))
+		print("[%i] : %s "%(c,i[2]))
 		c+=1
 	inp=input("which ones do you want to remove? (etc: '0,1,..')\n")
 	try:
@@ -153,7 +159,8 @@ def read_file(fn=".txt", exv=['!','#']):
 	return [np.array(N), str1]
 def print_any(a):
 	print("Choose what to print:")
-	print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
+	#print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
+	print(run_mh(a[0]).keys())
 	inp1=input("What would you like to print/save? 'a,{b,c,..}', {}:optional\n")
 	try:
 		inpv=inp1.split(",")
@@ -181,7 +188,8 @@ def plot_any(a):
 
 	while qu==False:
 		print("Choose what to plot:")
-		print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
+		#print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
+		print(run_mh(a[0]).keys())
 		ltru=False
 		ztru=False
 		inp1=input("What would you like to plot? 'X,Y,{Z,leg}', {}:optional\n")
@@ -336,7 +344,7 @@ def gotomenu(opt=["-opt"]):
 	menu.defoption('-rw','Rewrite pickle') # 0th menu item
 	menu.defoption('-a','Append to pickle') # 1th menu item... etc.
 	menu.defoption('-aa','Append all .txt files in the folder to pickle')
-	menu.defoption('-rm','remove element in pickle')	
+	menu.defoption('-rm','Remove element in pickle')	
 	menu.defoption('-c','Check whats in the pickle')	
 	menu.defoption('-cplot','Plot with a custom setup')	
 	menu.defoption('-print','Print values')
