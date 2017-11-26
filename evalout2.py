@@ -117,28 +117,6 @@ def read_file(fn=".txt", exv=['!','#']):
 			N.append(np.array(row))
 		else: str1.append(line)
 	return [np.array(N), str1]
-
-def menu(opt=["-opt"]):
-	menu=mymenu.menu()
-	menu.defoption('-rw','Rewrite pickle')
-	menu.defoption('-a','Append to pickle')
-	menu.defoption('-r','read from pickle')	
-	menu.defoption('-cplot','Plot a with a custom setup')	
-	menu.defoption('-print','Print values')
-	menu.defoption('-plcustom','Plot custom')
-	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
-	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
-	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
-	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
-	#menu.defoption('-tune','plot_tune(s,f_s)')
-	#menu.defoption('-test','hejhej')
-	if opt[0]=="-opt":
-		menu.print_menu()
-		exit()
-	for i in opt:
-		menu.option(i)
-	runopt(menu)
-	return
 def print_any(a):
 	print("Choose what to print:")
 	print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
@@ -188,21 +166,21 @@ def plot_any(a):
 		plt.figure(c)
 		fnames=[]
 		for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
-				plt.figure(c)
-				if ltru:
-					plt.plot([i[x]],[i[y]],'*')
-					plt.legend(i["leg"])
-				elif ztru:
-					fig=plt.figure(c)
-					ax=fig.add_subplot(111,projection='3d')
-					ax.scatter(i[x],i[y],i[z])
-				else:
-					xx=np.array(i[x])#/2/23*100
-					yy=np.array(i[y])/e.return_f0q0()[1]*100 #in percent
-					plt.plot(xx,yy,'*')
-					#plt.plot(i[x],i[y],'*')
-					fnames.append(' '.join(i["leg"]))
-			c+=1
+			plt.figure(c)
+			if ltru:
+				plt.plot([i[x]],[i[y]],'*')
+				plt.legend(i["leg"])
+			elif ztru:
+				fig=plt.figure(c)
+				ax=fig.add_subplot(111,projection='3d')
+				ax.scatter(i[x],i[y],i[z])
+			else:
+				xx=np.array(i[x])#/2/23*100
+				yy=np.array(i[y])/e.return_f0q0()[1]*100 #in percent
+				plt.plot(xx,yy,'*')
+				#plt.plot(i[x],i[y],'*')
+				fnames.append(' '.join(i["leg"]))
+		c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
 		if qin!='':
 			qu=True
@@ -275,6 +253,7 @@ def custom_plot(data):
 		except:
 			print("Wrong input")
 	return
+
 def runopt(menu):
 	if menu.boolopt[0]:
 		a=[get_mh()]
@@ -301,9 +280,29 @@ def runopt(menu):
 		custom_plot(data)
 		plt.show()
 	return
+
+def gotomenu(opt=["-opt"]):
+	menu=mymenu.menu()
+	menu.defoption('-rw','Rewrite pickle')
+	menu.defoption('-a','Append to pickle')
+	menu.defoption('-r','read from pickle')	
+	menu.defoption('-cplot','Plot with a custom setup')	
+	menu.defoption('-print','Print values')
+	menu.defoption('-plcustom','Plot custom')
+	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
+	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
+	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
+	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
+	#menu.defoption('-tune','plot_tune(s,f_s)')
+	#menu.defoption('-test','hejhej')
+	for i in opt:
+		menu.option(i)
+	if not any(menu.boolopt):
+		print("Wrong or no input arguments given\n")
+		menu.print_menu()
+		exit()		
+	runopt(menu)
+	return
+
 if __name__ == "__main__":
-	try:
-		menu(sys.argv[1:])
-	except IndexError:
-		print(sys.argv)
-		menu()
+	gotomenu(sys.argv[1:])
