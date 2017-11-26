@@ -10,6 +10,7 @@ import mymenu
 from mpl_toolkits.mplot3d import Axes3D
 
 def dump2pickle(a, pname="out.pickle"):
+	'''Creates a pickle in the directory of the script'''
 	#a=[[m,h],[m,h]] etc	
 	script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 	rel_path = pname
@@ -18,6 +19,7 @@ def dump2pickle(a, pname="out.pickle"):
 		pickle.dump(a, f)
 	return
 def readpickle(pname="out.pickle"):
+	'''Reads a pickle in the directory of the script'''
 	script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 	rel_path = pname
 	abs_file_path = os.path.join(script_dir, rel_path)
@@ -28,9 +30,9 @@ def readpickle(pname="out.pickle"):
 		exit()
 	return a
 def get_df_dq(m,s=''):
+	'''Calculates the dq and df from the matrix m and sorts it in s (the XXXX in (yyyXXXXyyy.yyy)'''
 	k=False
-	if len(s)!=0:
-		k=True
+	if len(s)!=0: k=True
 	[Q_0, f_0]=e.return_f0q0()	
 	dfv=[]
 	dqv=[]
@@ -46,17 +48,20 @@ def get_df_dq(m,s=''):
 		dqv=e.sort_ind(s,dqv)
 	return [dfv,dqv]
 def findep(df,kp):
+	'''Calculate the real part of the complex permittivity'''
 	[Q_0, f_0]=e.return_f0q0()	
 	ep=[]
 	for i in range(0,len(df)):
 		ep.append(df[i]/f_0/kp[i]+1)
 	return ep
 def findepp(dq,kpp):
+	'''Calculate the imaginary part of the complex permittivity'''
 	epp=[]
 	for i in range(0,len(dq)):
 		epp.append(dq[i]/2/kpp[i])
 	return epp
 def get_e(dfv,dqv):
+	'''Returns the complex permittivity found from the matrix m'''
 	[Kpf,Kppf]=e.get_k()
 	[Kpfm,Kppfm]=mc.get_k()
 	kp=[]
@@ -72,6 +77,7 @@ def get_e(dfv,dqv):
 	eim=findepp(dqv,kpp)
 	return	[ere, eim]
 def run_mh(mh):
+	'''Evaluates the matrix m and the header h'''
 	m=mh[0]
 	h=mh[1]
 	for i in h:
@@ -90,11 +96,25 @@ def run_mh(mh):
 		dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
 	return dict
 def run_a(a):
-	#a[3]
+	'''returns a vector of runs (dicts)'''
 	run=[]
 	for i in a:
 		run.append(run_mh(i))
 	return run
+def remove_from_pickle(a):
+	c=0
+	for i in a:
+		print("[%i] : %s: "%(c,i[2]))
+		c+=1
+	inp=input("which ones do you want to remove? (etc: '0,1,..')\n")
+	try:
+		inpv=inp.split(",")
+		for i in inpv:
+			a.pop(int(i))
+	except:
+		print("Wrong input")
+		exit()
+	return a
 def get_mh():
 	try:
 		fn=mf.find_file("output.txt")
@@ -103,7 +123,21 @@ def get_mh():
 		fn=mf.find_file(inp)	
 	for i in fn:
 		[m,h]=read_file(fn=i)
-	return [m,h]
+		fname=i
+		print(i)
+	return [m,h,fname]
+def save_all_mh():
+	try:
+		fn=mf.find_file(".txt")
+	except:
+		inp=input('No .txt files in current directory:')
+		exit()
+	a=[]
+	for i in fn:
+		print("Opening file %s"%i)
+		[m,h]=read_file(fn=i)
+		a.append([m,h,i])
+	return a
 def read_file(fn=".txt", exv=['!','#']):
 	'''Reads from file and returns a numpy array, The user specifies a unique char which is part of the unwanted lines.'''
 	f=open(fn,'r')
@@ -141,6 +175,7 @@ def print_any(a):
 	#	print(i.get('ss'))
 	return data
 def plot_any(a):
+	'''Plot anything everything within one run.'''
 	qu=False
 	c=1
 
@@ -206,6 +241,7 @@ def plot_any(a):
 		
 	return
 def custom_plot(data):
+	'''Not yet complete, will be used to plot vs different runs'''
 	sbool=False
 	inp=input("what do you want to plot? 'x,y,{ss}', {}:opitonal\n")
 	try:
@@ -252,26 +288,42 @@ def custom_plot(data):
 	return
 
 def runopt(menu):
-	if menu.boolopt[0]:
+	'''The function defines the content of each menu item, the order is the same as the when the the menu was created.'''	
+	if menu.boolopt[0]: #0th menu item
 		a=[get_mh()]
 		input("Are you sure you want to rewrite pickle? (crtl+c to cancel)")
 		dump2pickle(a)
-	elif menu.boolopt[1]:
+		print("%s saved to pickle"%a[0][2])
+	elif menu.boolopt[1]: #1th menu item.. etc
 		a=readpickle()
 		a.append(get_mh())
 		print("Appending pickle")
 		dump2pickle(a)
 	elif menu.boolopt[2]:
 		a=readpickle()
+		b=save_all_mh()
+		for i in b:
+			a.append(i)
+		print("Saving to pickle")
+		dump2pickle(a)
 	elif menu.boolopt[3]:
+		a=readpickle()
+		a=remove_from_pickle(a)
+		dump2pickle(a)
+		
+	elif menu.boolopt[4]:
+		a=readpickle()
+		for i in a:
+			print(i[2])
+	elif menu.boolopt[5]:
 		a=readpickle()
 		plot_any(a)
 		plt.show()
-	elif menu.boolopt[4]:
+	elif menu.boolopt[6]:
 		a=readpickle()
 		data=print_any(a)
 		print(data)
-	elif menu.boolopt[5]:
+	elif menu.boolopt[7]:
 		a=readpickle()
 		data=print_any(a)
 		custom_plot(data)
@@ -279,14 +331,16 @@ def runopt(menu):
 	return
 
 def gotomenu(opt=["-opt"]):
+	'''Creates a menu of input arguments'''
 	menu=mymenu.menu()
-	menu.defoption('-rw','Rewrite pickle')
-	menu.defoption('-a','Append to pickle')
-	menu.defoption('-r','read from pickle')	
+	menu.defoption('-rw','Rewrite pickle') # 0th menu item
+	menu.defoption('-a','Append to pickle') # 1th menu item... etc.
+	menu.defoption('-aa','Append all .txt files in the folder to pickle')
+	menu.defoption('-rm','remove element in pickle')	
+	menu.defoption('-c','Check whats in the pickle')	
 	menu.defoption('-cplot','Plot with a custom setup')	
 	menu.defoption('-print','Print values')
 	menu.defoption('-plcustom','Plot custom')
-	#menu.defoption('-imre','plot_e_im_vs_ere(eim,ere,leg)')
 	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
 	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
 	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
@@ -295,7 +349,8 @@ def gotomenu(opt=["-opt"]):
 	for i in opt:
 		menu.option(i)
 	if not any(menu.boolopt):
-		print("Wrong or no input arguments given\n")
+		print("Wrong or no input arguments given")
+		print(opt)
 		menu.print_menu()
 		exit()		
 	runopt(menu)

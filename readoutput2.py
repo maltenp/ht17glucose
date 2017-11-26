@@ -1,6 +1,8 @@
 import os
-def find_file(end1=""):
-	end1=end1+".DAT"
+import sys
+def find_file(end1=".DAT"):
+	'''Finds the file in the working directory'''
+	if end1.rfind("."):	end1=end1+".DAT"
 	print('Looking for file ending with: %s in current folder.'%end1)
 	fn=[]
 	for file in os.listdir():
@@ -12,42 +14,8 @@ def find_file(end1=""):
 		print('File ending with %s not found' %end1)
 		exit()
 	return fn
-		
-def read_file2(fn):
-	f=open(fn,'r')
-	mtrix=[]
-	N=[]
-	N.append("!")
-	c=-1
-	for line in f:
-		try:
-			name=line.split("PORT 1 DATA FILE")
-			str1=name[1].split()[1]+name[1].split()[2]
-			print("Evaluating: %s"%str1)
-			N.append(str1)
-			mtrix.append('')
-			c+=1
-		except:
-			pass
-		try:
-			q=line.split("Q0 =")
-			str1=' '.join(q[1].split())
-			print("Q0= %s"%str1)
-			Q=str1.split(" +- ")[0]
-			Qe=str1.split(" +- ")[1]
-		except:
-			pass
-		try:
-			fl=line.split("FL =")
-			str1=' '.join(fl[1].split())
-			print("FL= %s"%str1)
-			FL=str1.split()[0]
-			mtrix[c]=(Q,Qe,FL)
-		except:
-			pass
-	mtrix.insert(0,N)
-	return mtrix
-def read_file3(fn):
+def read_file(fn):
+	'''Reads the short output .DAT from qdemow and extracts Q0,Qe,FL,Ke,K'''
 	f=open(fn,'r')
 	mtrix=[]
 	N=[]
@@ -83,6 +51,7 @@ def read_file3(fn):
 				
 	return [mtrix, N]
 def print_to_txt(lst, fn='output.txt', h=''):
+	'''Prints to a file in the local directory'''
 	f=open(fn,'a')
 	f.write('# Q0 Q0e FL Ke K\n')
 	if h!='':
@@ -94,19 +63,19 @@ def print_to_txt(lst, fn='output.txt', h=''):
 				f.write("\n")
 	f.close()
 	return
-def main():
-	fn=find_file()
-	rf=[]
-	leg=[]
-	#read_file3(fn)
-	for i in fn: #only neccesary if you have multiple .DAT files.
+def readout(ar=[]):
+	'''Reads .DAT files and saves them to the _filename_r.txt'''
+	if len(ar)==0: fn=["OUT.DAT"]
+	for i in ar:
+		fn=find_file(i)
+
+	for i in fn:
 		print('Opening %s'%i)
-		[m,N]=read_file3(i)
-		rf.append(m)
-		#leg.append(N)
-		#print(rf)
-	
-	print_to_txt(rf[0],h=N) #only one .DAT
+		[m,N]=read_file(i)
+		nfn=i[:-4]+"r.txt"
+		print("Writing to: %s"%nfn)
+		print_to_txt(m,h=N,fn=nfn)
 	
 	return
-main()	
+if __name__ == "__main__":
+	readout(sys.argv[1:])
