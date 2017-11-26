@@ -3,12 +3,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import pickle
-'''finds and sorts on numbers YY the name of the input if input is named xxxYYxxxxxxxx, etc: eth88abcd.s1p'''
 def return_f0q0():
+	'''Called by other scripts'''
 	Q_0 =  4392.1 
 	f_0 = 3.00875840E+08
 	return [Q_0, f_0]
-def leg_and_s(h, ustart=3,ustop=-8, start="eth"):
+def return_e0eth():
+	'''Return compl. perm. for eth at ~300Mhz'''
+	# CONSTANTS FOUND IN PAPER FOR DIFFERENT CONC. OF ETHANOL ~300MHz
+	#echar={'0','08','26','47','75','91','96'};
+	e_p=[78.3,74.0,65.0,52.5,38.5,32.0,28.0];
+	e_pp=[1.19,1.35,2.25,3.4,3.6,4.0,5.7];
+	return [e_p, e_pp]
+def leg_and_s(h,ustop=-8, start="eth"):
+	'''Given filenames of the form _start_XXXyyyy.yyy in the header h, returns the number found in XXX and a legend made of the the name of each filename in the header '''
+	ustart=len(start)
 	leg=[]
 	s=[]
 	for i in h:
@@ -40,13 +49,11 @@ def sort_ind(s, v1i):
 		v1o.append(v1i[i])
 	return v1o
 def find_df_dq_kp_kpp(m,s=[]):
+	'''Calculates df,dq,kp,kpp from the matrix m'''
 	k=False
-	if len(s)!=0:
-		k=True
+	if len(s)!=0: k=True
 	[Q_0, f_0]=return_f0q0()	
-	#echar={'0','08','26','47','75','91','96'};
-	e_p=[78.3,74.0,65.0,52.5,38.5,32.0,28.0];
-	e_pp=[1.19,1.35,2.25,3.4,3.6,4.0,5.7];
+	[e_p, e_pp]=return_e0eth()
 	c=0
 	dfv=[]
 	dqv=[]
@@ -71,6 +78,7 @@ def find_df_dq_kp_kpp(m,s=[]):
 		kpp=sort_ind(s,kpp)
 	return [dfv,dqv,kp,kpp]
 def lin_fit(x,y):
+	'''Returns a vector of the points on a linear fit'''
 	p=np.poly1d(np.polyfit(x,y,1))
 	px=np.linspace(min(x)*(1-1e-3), max(x)*(1+1e-3), 100)
 	py=p(px)
@@ -85,6 +93,7 @@ def get_k():
 	Kppf=np.poly1d(np.polyfit(dqv,kpp,1))	
 	return [Kpf,Kppf]
 def show_cal():
+	'''Plots the calibration'''
 	[m,h]=readpickle()
 	#[ep, epp]=find_e(m #constant k
 	[leg, s]=leg_and_s(h)
