@@ -298,7 +298,8 @@ def custom_plot(a):
 			yy.append(y)
 		except TypeError:
 			pass
-	plt.plot(xx,yy,(spl[sc]+col[cc]))
+	
+	plt.plot(xx,yy)
 	plt.legend(temp['leg'])
 	return
 
