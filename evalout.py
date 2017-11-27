@@ -8,6 +8,8 @@ import pickle
 import os
 import mymenu
 from mpl_toolkits.mplot3d import Axes3D
+global spl
+spl=['-+','-o','-*','-.','-x','-s','-d','-^','-v','->','-<','-p','-h']
 
 def dump2pickle(a, pname="out.pickle"):
 	'''Creates a pickle in the directory of the script'''
@@ -207,17 +209,21 @@ def plot_any(a):
 				ztru=True
 		except: pass
 		plt.figure(c)
+		sc=0
 		for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
-				plt.figure(c)
-				if ltru:
-					plt.plot([i[x]],[i[y]],'*')
-					plt.legend(i["leg"])
-				elif ztru:
-					fig=plt.figure(c)
-					ax=fig.add_subplot(111,projection='3d')
-					ax.scatter(i[x],i[y],i[z])
-				else:
-					plt.plot(i[x],i[y],'*')
+			plt.figure(c)
+			if ltru:
+				plt.plot([i[x]],[i[y]],spl[sc])
+				plt.legend(i["leg"])
+			elif ztru:
+				fig=plt.figure(c)
+				ax=fig.add_subplot(111,projection='3d')
+				ax.scatter(i[x],i[y],i[z])
+			else:
+				plt.plot(i[x],i[y],spl[sc])
+			sc+=1
+			if sc==c:
+				sc=0
 		c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
 		if qin!='':
@@ -245,9 +251,10 @@ def plot_any(a):
 				plt.legend(cleg)
 			except:
 				print("Wrong input")
-		
+
 	return
 def custom_plot(a):
+	sc=0
 	'''Not yet complete, will be used to plot vs different runs'''
 	sbool=False
 	temp=run_mh(a[0])
@@ -273,7 +280,7 @@ def custom_plot(a):
 			yy.append(y)
 		except TypeError:
 			pass
-	plt.plot(xx,yy,'*')
+	plt.plot(xx,yy,spl[sc])
 	plt.legend(temp['leg'])
 	return
 
