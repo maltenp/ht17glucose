@@ -232,7 +232,8 @@ def plot_any(a):
 				new_length = 200
 				new_x = np.linspace(min(x1), max(x1), new_length)
 				new_y = sp.interpolate.interp1d(x1, y1, kind='cubic')(new_x)
-				plt.plot(x1,y1,(spl[sc]+col[cc]),new_x,new_y,col[cc])
+				plt.plot(x1,y1,(spl[sc]+col[cc]))
+				plt.plot(new_x,new_y,col[cc],label='_nolegend_')
 
 			sc+=1
 			cc+=1
