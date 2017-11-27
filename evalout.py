@@ -10,8 +10,9 @@ import mymenu
 import scipy as sp
 from scipy.interpolate import interp1d
 from mpl_toolkits.mplot3d import Axes3D
-global spl
+global spl, col
 spl=['+','o','*','.','x','s','d','^','v','>','<','p','h']
+col=['r','g','b','c','m','y','k']
 
 def dump2pickle(a, pname="out.pickle"):
 	'''Creates a pickle in the directory of the script'''
@@ -212,6 +213,7 @@ def plot_any(a):
 		except: pass
 		plt.figure(c)
 		sc=0
+		cc=0
 		for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
 			plt.figure(c)
 			if ltru:
@@ -230,11 +232,13 @@ def plot_any(a):
 				new_length = 200
 				new_x = np.linspace(min(x1), max(x1), new_length)
 				new_y = sp.interpolate.interp1d(x1, y1, kind='cubic')(new_x)
-				plt.plot(x1,y1,spl[sc],new_x,new_y)
+				plt.plot(x1,y1,(spl[sc]+col[cc]),new_x,new_y,col[cc])
 
 			sc+=1
 			if sc==len(spl):
 				sc=0
+			if cc==len(col):
+				cc=0
 		c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
 		if qin!='':
@@ -266,6 +270,7 @@ def plot_any(a):
 	return
 def custom_plot(a):
 	sc=0
+	cc=0
 	'''Not yet complete, will be used to plot vs different runs'''
 	sbool=False
 	temp=run_mh(a[0])
@@ -291,7 +296,7 @@ def custom_plot(a):
 			yy.append(y)
 		except TypeError:
 			pass
-	plt.plot(xx,yy,spl[sc])
+	plt.plot(xx,yy,(spl[sc]+col[cc]))
 	plt.legend(temp['leg'])
 	return
 
