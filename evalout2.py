@@ -247,51 +247,34 @@ def plot_any(a):
 				print("Wrong input")
 		
 	return
-def custom_plot(data):
+def custom_plot(a):
 	'''Not yet complete, will be used to plot vs different runs'''
 	sbool=False
-	inp=input("what do you want to plot? 'x,y,{ss}', {}:opitonal\n")
+	temp=run_mh(a[0])
+	print(temp.keys())
+	#print("Data length : %s" %len(temp['ss']))
+	#print("Pickle length: %s" %len(a))
+	for i in a:
+		print(i[2])
+	inpu=input('Specify the vector you want to plot againts (~foldername?)\nThe order should be the pickle order shown above\n(etc: 11,222,3333)\n')
+	inp=input("what do you want to plot? 'y'\n")
 	try:
-		inpv=inp.split(",")
+		inpv2=inpu.split(",")
+		xx=list(map(int,inpv2))
 	except:
 		print("Wrong input")
-	if len(inpv)>2:
-		sbool=True
-	xx=[]
+		exit()
 	yy=[]
-	ss=[]
-	for i in data:
-		x=i.get(inpv[0])
-		y=i.get(inpv[1])
-		try:
-			len(x)
-			xx.append(x)
-		except TypeError:
-			pass
+	for i in a:
+		d=run_mh(i)
+		y=d.get(inp)
 		try:
 			len(y)
 			yy.append(y)
 		except TypeError:
 			pass
-		if sbool:
-			s=i.get(inpv[2])
-			try:
-				len(s)
-				ss.append(s)
-			except TypeError:
-				pass
-			
-	plt.plot(xx,yy)
-	if sbool:
-		ssleg=list(map(str,ss[0]))
-		plt.legend(ssleg)
-	cl=input("\nDo you want to make a custom legend? ('leg1,leg2,leg3'  etc.)\n")
-	if cl!='':
-		try:
-			cleg=cl.split(",")
-			plt.legend(cleg)
-		except:
-			print("Wrong input")
+	plt.plot(xx,yy,'*')
+	plt.legend(temp['leg'])
 	return
 
 def runopt(menu):
@@ -332,8 +315,7 @@ def runopt(menu):
 		print(data)
 	elif menu.boolopt[7]:
 		a=readpickle()
-		data=print_any(a)
-		custom_plot(data)
+		custom_plot(a)
 		plt.show()
 	return
 
