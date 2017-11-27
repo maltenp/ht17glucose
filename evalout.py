@@ -126,6 +126,22 @@ def remove_from_pickle(a):
 		print("Wrong input")
 		exit()
 	return a
+def sort_a(a):
+	c=0
+	for i in a:
+		print("[%i] : %s "%(c,i[2]))
+		c+=1
+	inp=input("How do you want to sort the pickle?(etc: '3,0,2,1,..')\n")
+	try:
+		inpv=inp.split(",")
+		inpv=list(map(int,inpv))
+		new=[]
+		for i in inpv:
+			new.append(a[i])
+	except:
+		print("Wrong input")
+		exit()
+	return new
 def get_mh(fn='output.txt'):
 	try:
 		fn=mf.find_file(fn)
@@ -343,6 +359,14 @@ def runopt(menu):
 		a=readpickle()
 		custom_plot(a)
 		plt.show()
+	elif menu.boolopt[8]:
+		a=readpickle()
+		a=sort_a(a)
+		print("\nRearranging pickle:\n")
+		for i in a:
+			print(i[2])
+		dump2pickle(a)
+		print("\nExiting")
 	return
 
 def gotomenu(opt=["-opt"]):
@@ -356,7 +380,7 @@ def gotomenu(opt=["-opt"]):
 	menu.defoption('-cplot','Plot with a custom setup')	
 	menu.defoption('-print','Print values')
 	menu.defoption('-plcustom','Plot custom')
-	#menu.defoption('-e','plot_e(s, ere,eim, leg)')
+	menu.defoption('-sorta','sort a by manually specifying the order')
 	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
 	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
 	#menu.defoption('-tune','plot_tune(s,f_s)')
