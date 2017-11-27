@@ -317,8 +317,7 @@ def custom_plot(a):
 	
 	plt.plot(xx,yy)
 	plt.legend(temp['leg'])
-	return
-
+	return1
 def runopt(menu):
 	'''The function defines the content of each menu item, the order is the same as the when the the menu was created.'''	
 	if menu.boolopt[0]: #0th menu item
@@ -394,6 +393,5 @@ def gotomenu(opt=["-opt"]):
 		exit()		
 	runopt(menu)
 	return
-
 if __name__ == "__main__":
 	gotomenu(sys.argv[1:])
