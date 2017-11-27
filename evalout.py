@@ -222,7 +222,7 @@ def plot_any(a):
 			else:
 				plt.plot(i[x],i[y],spl[sc])
 			sc+=1
-			if sc==c:
+			if sc==len(spl):
 				sc=0
 		c+=1
 		qin=input("Press enter to plot again('any_key+enter' to exit)")
