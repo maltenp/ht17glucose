@@ -235,6 +235,7 @@ def plot_any(a):
 				plt.plot(x1,y1,(spl[sc]+col[cc]),new_x,new_y,col[cc])
 
 			sc+=1
+			cc+=1
 			if sc==len(spl):
 				sc=0
 			if cc==len(col):
