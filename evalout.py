@@ -12,7 +12,7 @@ from scipy.interpolate import interp1d
 from mpl_toolkits.mplot3d import Axes3D
 global spl, col
 spl=['+','o','*','.','x','s','d','^','v','>','<','p','h']
-col=['r','g','b','c','m','y','k']
+col=['b','r','g','c','m','y','k']
 
 def dump2pickle(a, pname="out.pickle"):
 	'''Creates a pickle in the directory of the script'''
