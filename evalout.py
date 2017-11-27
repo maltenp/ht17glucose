@@ -7,9 +7,11 @@ import sys
 import pickle
 import os
 import mymenu
+import scipy as sp
+from scipy.interpolate import interp1d
 from mpl_toolkits.mplot3d import Axes3D
 global spl
-spl=['-+','-o','-*','-.','-x','-s','-d','-^','-v','->','-<','-p','-h']
+spl=['+','o','*','.','x','s','d','^','v','>','<','p','h']
 
 def dump2pickle(a, pname="out.pickle"):
 	'''Creates a pickle in the directory of the script'''
@@ -219,8 +221,17 @@ def plot_any(a):
 				fig=plt.figure(c)
 				ax=fig.add_subplot(111,projection='3d')
 				ax.scatter(i[x],i[y],i[z])
-			else:
-				plt.plot(i[x],i[y],spl[sc])
+			else:			
+				x1=i[x]
+				y1=i[y]
+				points = zip(x1, y1)
+				points = sorted(points, key=lambda point: point[0])
+				x1, y1 = zip(*points)
+				new_length = 200
+				new_x = np.linspace(min(x1), max(x1), new_length)
+				new_y = sp.interpolate.interp1d(x1, y1, kind='cubic')(new_x)
+				plt.plot(x1,y1,spl[sc],new_x,new_y)
+
 			sc+=1
 			if sc==len(spl):
 				sc=0
