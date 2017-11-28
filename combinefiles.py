@@ -26,7 +26,7 @@ def runscript():
 	h=[]
 	for i in fn1:
 		print('Opening %s'%i)
-		r=m.read_file2(,exv)
+		r=m.read_file(i,exv)
 		h.append(i+'='+str(r.shape))
 		rf.append(r)
 	h="!"+''.join(h)
