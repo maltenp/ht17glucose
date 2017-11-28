@@ -11,7 +11,7 @@ import scipy as sp
 from scipy.interpolate import interp1d
 from mpl_toolkits.mplot3d import Axes3D
 global spl, col
-spl=['+','o','*','.','x','s','d','^','v','>','<','p','h']
+spl=['+','o','*','x','s','d','^','v','>','<','p','h']
 col=['b','r','g','c','m','y','k']
 
 def dump2pickle(a, pname="out.pickle"):
@@ -314,9 +314,34 @@ def custom_plot(a):
 			yy.append(y)
 		except TypeError:
 			pass
-	
-	plt.plot(xx,yy)
-	plt.legend(temp['leg'])
+	xx=np.array(xx)
+	yy=np.array(yy)
+	j=0
+	# for i in range(np.shape(yy)[0]):
+		# xx1=xx[i]*np.ones(np.shape(yy)[1])
+		# yy1=yy[i,:]
+		# print(np.shape(xx1))
+		# print(np.shape(yy1))
+		# plt.plot(xx1,yy1,("-"+spl[j]))
+		# j=+1
+		# if i>len(spl):
+	fig=plt.plot(xx,yy)
+	j=0
+	for i in fig:
+		i.set_marker(spl[j])
+		j+=1
+		if j>len(spl)-1:
+			j=0
+	te=[]
+	for i in temp['leg']:
+		te.append(i[3:]+"$^o$C")
+	plt.legend(te)
+	t=input("Enter title:")
+	xl=input("Enter xlabel:")
+	yl=input("Enter ylabel:")
+	plt.title(t)
+	plt.xlabel(xl)
+	plt.ylabel(yl)
 	return
 def runopt(menu):
 	'''The function defines the content of each menu item, the order is the same as the when the the menu was created.'''	
