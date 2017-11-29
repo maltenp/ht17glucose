@@ -102,8 +102,10 @@ def run_mh(mh):
 	try:
 		Ke=m[:,3]
 		K=m[:,4]
-		#dict={"Q0":m[:,0],"Q0e":m[:,1],"FL":m[:,2],"Ke":m[:,3],"K":m[:,4],"leg":leg,"ss":ss,"dfv":dfv,"dqv":dqv,"ere":ere,"eim":eim}
 	except IndexError:pass
+	#----------DEFINE SPECIAL PLOTS:-------------------
+	tand=np.array(eim)/np.array(ere);
+	#--------------------------------------------------
 	del stn,s,i,h,m,mh #remove copies and unncessesary items in the dict
 	return locals()
 def run_a(a):
