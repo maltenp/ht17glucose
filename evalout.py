@@ -408,7 +408,7 @@ def gotomenu(opt=["-opt"]):
 	menu.defoption('-cplot','Plot with a custom setup')	
 	menu.defoption('-print','Print values')
 	menu.defoption('-plcustom','Plot custom')
-	menu.defoption('-sorta','sort a by manually specifying the order')
+	menu.defoption('-sorta','Sort the pickle by manually specifying the order')
 	#menu.defoption('-vfs','plot_v_fs(s,f_s,leg)')
 	#menu.defoption('-gfs','plot_glucose_fs(s,f_s,leg)')
 	#menu.defoption('-tune','plot_tune(s,f_s)')
