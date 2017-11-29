@@ -197,18 +197,25 @@ def print_any(a):
 	i=[]
 	for j in a: # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
 		i=run_mh(j)
-		row=[]
+		M=[]
+		#M.append(i["ss"])
 		c+=1
 		print("\n%s:"%j[2])
 		for k in inpv:
-			print("name\t%s"%k)
-			for r in range(len(i[k])):
-				print("%s\t%1.4f"%(i['leg'][r],i[k][r]))
+			M.append(i[k])
+			# print("name\t%s"%k)
+			# for r in range(len(i[k])):
+				# print("%s\t%1.4f"%(i['leg'][r],i[k][r]))
 			#print(row)
-			data.append(row)
+		M=np.array(M)
+		print(np.shape(M))
+		M=M.transpose()
+		print("name:\t",end='')
+		print(inpv)
+		print(M)				
 	#for i in data:
 	#	print(i.get('ss'))
-	return data
+	return 
 def plot_any(a):
 	'''Plot anything everything within one run.'''
 	qu=False
