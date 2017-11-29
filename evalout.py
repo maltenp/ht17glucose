@@ -106,7 +106,7 @@ def run_mh(mh):
 		K=m[:,4]
 	except IndexError:pass
 	#----------DEFINE SPECIAL PLOTS:-------------------
-	tand=np.array(eim)/np.array(ere);
+	tand=np.array(eim)/np.array(ere)
 	#--------------------------------------------------
 	del stn,s,i,h,m,mh #remove copies and unncessesary items in the dict
 	return locals()
