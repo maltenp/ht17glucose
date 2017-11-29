@@ -82,7 +82,9 @@ def get_e(dfv,dqv):
 	eim=findepp(dqv,kpp)
 	return	[ere, eim]
 def run_mh(mh):
-	'''Evaluates the matrix m and the header h and returns a dict'''
+	'''Evaluates the matrix m and the header h and returns a dict
+	You can also define additional things you want to plot here see:
+	#DEFINE SPECIAL PLOTS below'''
 	m=mh[0]
 	h=mh[1]
 	for i in h:
