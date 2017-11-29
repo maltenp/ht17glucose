@@ -194,15 +194,18 @@ def print_any(a):
 		exit()
 	data=[]
 	c=0
-	for i in run_a(a): # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
+	i=[]
+	for j in a: # i=dict[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]
+		i=run_mh(j)
 		row=[]
 		c+=1
+		print("\n%s:"%j[2])
 		for k in inpv:
-			row={k:i[k]}
-			#print(row)
+			row=i[k]
+			for r in range(len(row)):
+				print("%s\t%1.4f"%(i['leg'][r],row[r]))
 			#print(row)
 			data.append(row)
-	print("data saved")
 	#for i in data:
 	#	print(i.get('ss'))
 	return data
@@ -382,7 +385,7 @@ def runopt(menu):
 	elif menu.boolopt[6]:
 		a=readpickle()
 		data=print_any(a)
-		print(data)
+		#print(data)
 	elif menu.boolopt[7]:
 		a=readpickle()
 		custom_plot(a)
