@@ -201,9 +201,9 @@ def print_any(a):
 		c+=1
 		print("\n%s:"%j[2])
 		for k in inpv:
-			row=i[k]
-			for r in range(len(row)):
-				print("%s\t%1.4f"%(i['leg'][r],row[r]))
+			print("name\t%s"%k)
+			for r in range(len(i[k])):
+				print("%s\t%1.4f"%(i['leg'][r],i[k][r]))
 			#print(row)
 			data.append(row)
 	#for i in data:
