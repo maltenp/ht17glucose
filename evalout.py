@@ -226,8 +226,9 @@ def plot_any(a):
 		#print("[Q0, Q0e, FL, Ke, K, leg, ss, dfv, dqv, ere, eim]")
 		print(run_mh(a[0]).keys())
 		ltru=False
+		stru=False
 		ztru=False
-		inp1=input("What would you like to plot? 'X,Y,{Z,leg}', {}:optional\n")
+		inp1=input("What would you like to plot? 'X,Y,{Z,leg,S}', {}:optional, S->spline\n")
 		try:
 			x=inp1.split(",")[0]
 			y=inp1.split(",")[1]
@@ -238,6 +239,8 @@ def plot_any(a):
 			z=inp1.split(",")[2]
 			if z=="leg":
 				ltru=True
+			elif z=="S":
+				stru=True
 			else:
 				ztru=True
 		except: pass
@@ -256,15 +259,16 @@ def plot_any(a):
 			else:			
 				x1=i[x]
 				y1=i[y]
-				points = zip(x1, y1)
-				points = sorted(points, key=lambda point: point[0])
-				x1, y1 = zip(*points)
-				new_length = 200
-				new_x = np.linspace(min(x1), max(x1), new_length)
-				new_y = sp.interpolate.interp1d(x1, y1, kind='cubic')(new_x)
 				plt.plot(x1,y1,(spl[sc]+col[cc]))
-				plt.plot(new_x,new_y,col[cc],label='_nolegend_')
-
+				if stru:
+					points = zip(x1, y1)
+					points = sorted(points, key=lambda point: point[0])
+					x1, y1 = zip(*points)
+					new_length = 200
+					new_x = np.linspace(min(x1), max(x1), new_length)
+					new_y = sp.interpolate.interp1d(x1, y1, kind='cubic')(new_x)
+					plt.plot(new_x,new_y,col[cc],label='_nolegend_')
+				
 			sc+=1
 			cc+=1
 			if sc==len(spl):
