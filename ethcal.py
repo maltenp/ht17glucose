@@ -100,21 +100,39 @@ def show_cal():
 	#[legs, eps, epps]=sort_ind(s, leg, ep, epp) # constant k.
 	[dfv,dqv,kp,kpp]=find_df_dq_kp_kpp(m,s)
 	plt.figure(1)
-	plt.plot([dfv],[kp],'*')
-	plt.xlabel('$\Delta$f [Hz]')
+	dfv=np.array(dfv)/1e6
+	fig=plt.plot([dfv],[kp],'*')
+	spl=['+','*','x','s','d','^','v','>','<','p','h','o']
+	c=0
+	for i in fig:
+		i.set_marker(spl[c])
+		c+=1
+	plt.xlabel('$\Delta$f [Mhz]')
 	plt.ylabel("K'")
-	plt.title("K'($\Delta$f)")
-	plt.legend(sort_ind(s,leg))
+	#plt.title("K'($\Delta$f)")
+	#plt.legend(sort_ind(s,leg))
+	newleg=[]
+	for i in sort_ind(s,leg):
+		newleg.append(i[3:]+"%")
+	plt.legend(newleg)
 	plt.ticklabel_format(style='sci', axis='y', scilimits=(1,3))
 	[px,py]=lin_fit(dfv,kp)
 	plt.plot(px,py)
 	plt.figure(2)
-	plt.plot([dqv],[kpp],'*')
+	fig=plt.plot([dqv],[kpp],'*')
+	c=0
+	for i in fig:
+		i.set_marker(spl[c])
+		c+=1
 	plt.xlabel('1/$\Delta$Q')
 	plt.ticklabel_format(style='sci', axis='y', scilimits=(1,3))
 	plt.ylabel("K''")
-	plt.title("K''(1/$\Delta$Q)")
-	plt.legend(sort_ind(s,leg))
+	#plt.title("K''(1/$\Delta$Q)")
+	newleg=[]
+	for i in sort_ind(s,leg):
+		newleg.append(i[3:]+"%")
+	plt.legend(newleg)
+	#plt.legend(sort_ind(s,leg))
 	[px,py]=lin_fit(dqv,kpp)
 	plt.plot(px,py)
 	plt.show()

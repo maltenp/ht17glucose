@@ -107,6 +107,7 @@ def run_mh(mh):
 	except IndexError:pass
 	#----------DEFINE SPECIAL PLOTS:-------------------
 	tand=np.array(eim)/np.array(ere)
+	dfvMHZ=np.array(dfv)/1e6
 	#--------------------------------------------------
 	del stn,s,i,h,m,mh #remove copies and unncessesary items in the dict
 	return locals()
@@ -252,6 +253,11 @@ def plot_any(a):
 			if ltru:
 				plt.plot([i[x]],[i[y]],spl[sc])
 				plt.legend(i["leg"])
+				#make special legend:
+				#newleg=[]
+				#for k in i["leg"]:
+				#	newleg.append(k[3:]+"$^o$C")
+				#plt.legend(newleg)
 			elif ztru:
 				fig=plt.figure(c)
 				ax=fig.add_subplot(111,projection='3d')
