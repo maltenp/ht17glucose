@@ -5,15 +5,23 @@ import os
 import pickle
 def return_f0q0():
 	'''Called by other scripts'''
-	Q_0 =  4392.1 
-	f_0 = 3.00875840E+08
+	# Q_0 =  4581.4 
+	Q_0 =  794.5 
+	#Q_0 =  4392.1 
+	# f_0 = 3.02299232e8
+	f_0 = 2.89746336E+08
+	#f_0 = 3.00875840E+08
 	return [Q_0, f_0]
 def return_e0eth():
 	'''Return compl. perm. for eth at ~300Mhz'''
 	# CONSTANTS FOUND IN PAPER FOR DIFFERENT CONC. OF ETHANOL ~300MHz
 	#echar={'0','08','26','47','75','91','96'};
-	e_p=[78.3,74.0,65.0,52.5,38.5,32.0,28.0];
-	e_pp=[1.19,1.35,2.25,3.4,3.6,4.0,5.7];
+	# e_p=[78.3,74.0,65.0,52.5,38.5,32.0,28.0];
+	# e_p=[78.3,65.0,52.5,38.5,32.0,28.0];
+	e_p=[1+1e-10,65.0/78.3,52.5/78.3,38.5/78.3,32.0/78.3,28.0/78.3];
+	# e_pp=[1.19,1.35,2.25,3.4,3.6,4.0,5.7];
+	# e_pp=[1.19,2.25,3.4,3.6,4.0,5.7];
+	e_pp=[1-1e-10,2.25/1.19,3.4/1.19,3.6/1.19,4.0/1.19,5.7/1.19];
 	return [e_p, e_pp]
 def leg_and_s(h,ustop=-8, start="eth"):
 	'''Given filenames of the form _start_XXXyyyy.yyy in the header h, returns the number found in XXX and a legend made of the the name of each filename in the header '''
@@ -30,7 +38,7 @@ def leg_and_s(h,ustop=-8, start="eth"):
 				s.append(int(k))
 	return [leg, s]
 def dump2pickle():
-	fn=mf.find_file('ethcal2.txt')
+	fn=mf.find_file('ethmotor.txt')
 	[m,h]=mf.read_file2(fn[0])
 	with open("eth.pickle","wb") as f:
 		pickle.dump( [m,h], f)
@@ -71,6 +79,8 @@ def find_df_dq_kp_kpp(m,s=[]):
 		kp.append(float(K_p))
 		kpp.append(float(K_pp))
 		c+=1
+	kp[0]=3e-2 #höftat!
+	kpp[0]=0.5e-4 #höftat
 	if k:
 		dfv=sort_ind(s,dfv)
 		dqv=sort_ind(s,dqv)
@@ -81,6 +91,11 @@ def lin_fit(x,y):
 	'''Returns a vector of the points on a linear fit'''
 	p=np.poly1d(np.polyfit(x,y,1))
 	px=np.linspace(min(x)*(1-1e-3), max(x)*(1+1e-3), 100)
+	py=p(px)
+	return [px,py]
+def exp_fit(x,y):
+	p=np.poly1d(np.polyfit(np.log(x),y,1))
+	px=np.linspace(min(np.log(x))*(1-1e-3), max(np.log(x))*(1+1e-3), 100)
 	py=p(px)
 	return [px,py]
 def get_k():
@@ -135,5 +150,16 @@ def show_cal():
 	#plt.legend(sort_ind(s,leg))
 	[px,py]=lin_fit(dqv,kpp)
 	plt.plot(px,py)
+	# plt.figure(3)
+	# [dfv,dqv,kp,kpp]=find_df_dq_kp_kpp(m,s)
+	# [px,py]=lin_fit(np.log(np.array(dqv)*-1),np.array(kpp)*-1)
+	# plt.plot(px,py)
+	# plt.plot([np.log(np.array(dqv))],[kpp])
+	# plt.figure(4)
+	# kp[0]=1.00001
+	# [px,py]=lin_fit(dfv,np.log(np.array(kp)))
+	# plt.plot([dfv],[np.log(np.array(kp))])
+	# plt.plot(px,py)
+	
 	plt.show()
 	return

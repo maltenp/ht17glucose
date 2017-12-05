@@ -48,6 +48,7 @@ def get_df_dq(m,s=''):
 		dq=(1/q_s-1/Q_0)
 		dfv.append(float(df))
 		dqv.append(float(dq))
+	#dqv[0]=-8.8e-6
 	if k:
 		dfv=e.sort_ind(s,dfv)
 		dqv=e.sort_ind(s,dqv)
@@ -63,7 +64,7 @@ def findepp(dq,kpp):
 	'''Calculate the imaginary part of the complex permittivity'''
 	epp=[]
 	for i in range(0,len(dq)):
-		epp.append(dq[i]/2/kpp[i])
+		epp.append(dq[i]/2/kpp[i]+1)
 	return epp
 def get_e(dfv,dqv):
 	'''Returns the complex permittivity found from the matrix m'''
@@ -72,10 +73,10 @@ def get_e(dfv,dqv):
 	kp=[]
 	kpp=[]
 	for i in range(0,len(dfv)):
-		kp.append(np.mean([Kpf(dfv[i]),Kpfm(dfv[i])]))
-		kpp.append(np.mean([Kppf(dqv[i]),Kppfm(dqv[i])]))
-		#kp.append(Kpf(dfv[i]))
-		#kpp.append(Kppf(dqv[i]))
+		#kp.append(np.mean([Kpf(dfv[i]),Kpfm(dfv[i])]))
+		#kpp.append(np.mean([Kppf(dqv[i]),Kppfm(dqv[i])]))
+		kp.append(Kpf(dfv[i]))
+		kpp.append(Kppf(dqv[i]))
 		#kp.append(Kpfm(dfv[i]))
 		#kpp.append(Kppfm(dqv[i]))
 	ere=findep(dfv,kp)
@@ -98,6 +99,8 @@ def run_mh(mh):
 	#print('%s will be sorted'%s)
 	[dfv,dqv]=get_df_dq(m,s)
 	[ere, eim]=get_e(dfv,dqv)
+	ere=e.sort_ind(s,ere)
+	eim=e.sort_ind(s,eim)
 	Q0=m[:,0]
 	Q0e=m[:,1]
 	FL=m[:,2]
@@ -108,6 +111,13 @@ def run_mh(mh):
 	#----------DEFINE SPECIAL PLOTS:-------------------
 	tand=np.array(eim)/np.array(ere)
 	dfvMHZ=np.array(dfv)/1e6
+	were=72.3*np.array(ere)
+	weim=1.19*np.array(eim)
+	wtand=weim/were
+	#mwere=np.array(ere)*-1.3022
+	#mweim=np.array(eim)*-0.0666
+	#mwtand=weim/mwere
+	
 	#--------------------------------------------------
 	del stn,s,i,h,m,mh #remove copies and unncessesary items in the dict
 	return locals()
