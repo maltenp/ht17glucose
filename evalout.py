@@ -111,7 +111,7 @@ def run_mh(mh):
 	#----------DEFINE SPECIAL PLOTS:-------------------
 	tand=np.array(eim)/np.array(ere)
 	dfvMHZ=np.array(dfv)/1e6
-	were=72.3*np.array(ere)
+	were=78.3*np.array(ere)
 	weim=1.19*np.array(eim)
 	wtand=weim/were
 	#mwere=np.array(ere)*-1.3022
