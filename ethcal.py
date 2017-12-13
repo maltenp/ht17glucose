@@ -6,10 +6,12 @@ import pickle
 def return_f0q0():
 	'''Called by other scripts'''
 	# Q_0 =  4581.4 
-	Q_0 =  794.5 
+	# Q_0 =  794.5 
+	Q_0 =  692.7 
 	#Q_0 =  4392.1 
 	# f_0 = 3.02299232e8
-	f_0 = 2.89746336E+08
+	# f_0 = 2.89746336E+08
+	f_0 = 2.89620832E+08
 	#f_0 = 3.00875840E+08
 	return [Q_0, f_0]
 def return_e0eth():
@@ -18,10 +20,14 @@ def return_e0eth():
 	#echar={'0','08','26','47','75','91','96'};
 	# e_p=[78.3,74.0,65.0,52.5,38.5,32.0,28.0];
 	# e_p=[78.3,65.0,52.5,38.5,32.0,28.0];
-	e_p=[1+1e-10,65.0/78.3,52.5/78.3,38.5/78.3,32.0/78.3,28.0/78.3];
+	# e_p=[1+1e-10,65.0/78.3,52.5/78.3,38.5/78.3,32.0/78.3,28.0/78.3];
+	# e_p=[1+1e-10,65.0/78.3,52.5/78.3,38.5/78.3]#,32.0/78.3,28.0/78.3]; #NOT ADJUSTED
+	e_p=[1+1e-10,65.0/78.3,53.5/78.3,39.8/78.3]#,32.0/78.3,28.0/78.3];
 	# e_pp=[1.19,1.35,2.25,3.4,3.6,4.0,5.7];
 	# e_pp=[1.19,2.25,3.4,3.6,4.0,5.7];
-	e_pp=[1-1e-10,2.25/1.19,3.4/1.19,3.6/1.19,4.0/1.19,5.7/1.19];
+	# e_pp=[1-1e-10,2.25/1.19,3.4/1.19,3.6/1.19,4.0/1.19,5.7/1.19];
+	# e_pp=[1-1e-10,2.25/1.19,3.4/1.19,3.6/1.19]#,4.0/1.19,5.7/1.19];# NOT ADJUSTED
+	e_pp=[1-1e-10,2.25/1.19,3.42/1.19,3.59/1.19]#,4.0/1.19,5.7/1.19];
 	return [e_p, e_pp]
 def leg_and_s(h,ustop=-8, start="eth"):
 	'''Given filenames of the form _start_XXXyyyy.yyy in the header h, returns the number found in XXX and a legend made of the the name of each filename in the header '''
@@ -38,7 +44,7 @@ def leg_and_s(h,ustop=-8, start="eth"):
 				s.append(int(k))
 	return [leg, s]
 def dump2pickle():
-	fn=mf.find_file('ethmotor.txt')
+	fn=mf.find_file('ethmotor2.txt')
 	[m,h]=mf.read_file2(fn[0])
 	with open("eth.pickle","wb") as f:
 		pickle.dump( [m,h], f)
@@ -79,8 +85,8 @@ def find_df_dq_kp_kpp(m,s=[]):
 		kp.append(float(K_p))
 		kpp.append(float(K_pp))
 		c+=1
-	kp[0]=3e-2 #höftat!
-	kpp[0]=0.5e-4 #höftat
+	kp[0]=0.5e-2 #höftat!
+	kpp[0]=0.2e-4 #höftat
 	if k:
 		dfv=sort_ind(s,dfv)
 		dqv=sort_ind(s,dqv)
