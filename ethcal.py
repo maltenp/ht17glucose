@@ -6,14 +6,14 @@ import pickle
 def return_f0q0():
 	'''Called by other scripts'''
 	# Q_0 =  4581.4 
-	# Q_0 =  794.5 
-	Q_0 =  692.7 
+	Q_0m =  808.1 #glucose run
+	Q_0 =  692.7  #calibration
 	#Q_0 =  4392.1 
 	# f_0 = 3.02299232e8
-	# f_0 = 2.89746336E+08
-	f_0 = 2.89620832E+08
+	f_0m = 2.89671072E+08 #glucose run
+	f_0 = 2.89620832E+08 #calibration
 	#f_0 = 3.00875840E+08
-	return [Q_0, f_0]
+	return [Q_0, f_0, Q_0m, f_0m]
 def return_e0eth():
 	'''Return compl. perm. for eth at ~300Mhz'''
 	# CONSTANTS FOUND IN PAPER FOR DIFFERENT CONC. OF ETHANOL ~300MHz
@@ -66,7 +66,7 @@ def find_df_dq_kp_kpp(m,s=[]):
 	'''Calculates df,dq,kp,kpp from the matrix m'''
 	k=False
 	if len(s)!=0: k=True
-	[Q_0, f_0]=return_f0q0()	
+	[Q_0, f_0, Q_0m, f_0m]=return_f0q0()	
 	[e_p, e_pp]=return_e0eth()
 	c=0
 	dfv=[]
